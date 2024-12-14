@@ -7,9 +7,13 @@ transformation:
   scaling_method: "minmax"
 
 model:
-  type: "decisiontree"  # Options: "logistic" or "decisiontree"
-  params: 
-     max_depth : 3
-    
+  type: "decisiontree" # Options: "logistic" or "decisiontree"
+  params : {}
+
 splitting:
   test_size: 0.2
+
+mlflow:
+  tracking_uri: "http://mlflow:5000"
+  experiment_name: "air_pollution_experiments"
+

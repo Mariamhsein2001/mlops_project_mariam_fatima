@@ -1,0 +1,15 @@
+data_loader:
+  file_path: "data/updated_pollution_dataset.csv"
+  file_type: "csv"
+
+transformation:
+  normalize: false
+  scaling_method: "minmax"
+
+model:
+  type: "decisiontree"  # Options: "logistic" or "decisiontree"
+  params: 
+     max_depth : 3
+    
+splitting:
+  test_size: 0.2

@@ -97,8 +97,9 @@ class SplittingConfig(BaseModel):
         random_state (int): The seed used for random number generation.
     """
 
-    test_size: float = Field(..., ge=0.0, le=1.0, description="Proportion of test data.")
-    
+    test_size: float = Field(
+        ..., ge=0.0, le=1.0, description="Proportion of test data."
+    )
 
     @field_validator("test_size")
     def validate_test_size(cls, value: float) -> float:
@@ -115,6 +116,55 @@ class SplittingConfig(BaseModel):
         """
         if not (0.0 < value < 1.0):
             raise ValueError("test_size must be between 0 and 1.")
+        return value
+
+class MLflowConfig(BaseModel):
+    """Configuration for MLflow.
+
+    Attributes:
+        tracking_uri (str): The URI for the MLflow tracking server. 
+            Must be a valid URI.
+        experiment_name (str): The name of the MLflow experiment. 
+            Must not be empty.
+    """
+
+    tracking_uri: str
+    experiment_name: str
+
+    @field_validator("tracking_uri")
+    def validate_tracking_uri(cls, value: str) -> str:
+        """Validates the tracking URI.
+
+        Args:
+            value (str): The tracking URI to validate.
+
+        Returns:
+            str: The validated tracking URI.
+
+        Raises:
+            ValueError: If the URI is invalid.
+        """
+        if not value.startswith(("http://", "https://", "file://")):
+            raise ValueError(
+                "tracking_uri must start with 'http://', 'https://', or 'file://'."
+            )
+        return value
+
+    @field_validator("experiment_name")
+    def validate_experiment_name(cls, value: str) -> str:
+        """Validates the experiment name.
+
+        Args:
+            value (str): The experiment name to validate.
+
+        Returns:
+            str: The validated experiment name.
+
+        Raises:
+            ValueError: If the name is empty or invalid.
+        """
+        if not value.strip():
+            raise ValueError("experiment_name must not be empty.")
         return value
 
 
@@ -134,7 +184,7 @@ class Config(BaseModel):
     transformation: TransformationConfig
     model: ModelConfig
     splitting: SplittingConfig
-    
+    mlflow: MLflowConfig
 
 
 def load_config(config_path: str) -> Config:

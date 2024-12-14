@@ -3,6 +3,7 @@ from omegaconf import OmegaConf
 from pydantic import BaseModel, Field, field_validator
 from typing import Dict, Any
 
+
 class DataLoaderConfig(BaseModel):
     """Configuration for the data loader.
 
@@ -71,6 +72,7 @@ class ModelConfig(BaseModel):
 
     type: str
     params: Dict[str, Any] = {}
+
     @field_validator("type")
     def validate_model_type(cls, value: str) -> str:
         """Validates the model type.
@@ -166,7 +168,6 @@ class MLflowConfig(BaseModel):
         if not value.strip():
             raise ValueError("experiment_name must not be empty.")
         return value
-
 
 
 class Config(BaseModel):

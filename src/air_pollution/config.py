@@ -3,6 +3,7 @@ from omegaconf import OmegaConf
 from pydantic import BaseModel, Field, field_validator
 from typing import Dict, Any
 
+
 class DataLoaderConfig(BaseModel):
     """Configuration for the data loader.
 
@@ -71,6 +72,7 @@ class ModelConfig(BaseModel):
 
     type: str
     params: Dict[str, Any] = {}
+
     @field_validator("type")
     def validate_model_type(cls, value: str) -> str:
         """Validates the model type.
@@ -97,8 +99,9 @@ class SplittingConfig(BaseModel):
         random_state (int): The seed used for random number generation.
     """
 
-    test_size: float = Field(..., ge=0.0, le=1.0, description="Proportion of test data.")
-    
+    test_size: float = Field(
+        ..., ge=0.0, le=1.0, description="Proportion of test data."
+    )
 
     @field_validator("test_size")
     def validate_test_size(cls, value: float) -> float:
@@ -118,7 +121,6 @@ class SplittingConfig(BaseModel):
         return value
 
 
-
 class Config(BaseModel):
     """Overall configuration for the pipeline.
 
@@ -134,7 +136,6 @@ class Config(BaseModel):
     transformation: TransformationConfig
     model: ModelConfig
     splitting: SplittingConfig
-    
 
 
 def load_config(config_path: str) -> Config:

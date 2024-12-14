@@ -1,4 +1,3 @@
-
 # src/air_pollution/data_loader/base_loader.py
 from abc import ABC, abstractmethod
 

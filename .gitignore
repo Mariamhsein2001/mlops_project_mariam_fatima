@@ -1,0 +1,11 @@
+# Python cache and build files
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.pytest_cache/
+# Data directory
+data/
+# Logs and temporary files
+*.log
+*.tmp

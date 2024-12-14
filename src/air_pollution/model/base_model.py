@@ -1,13 +1,15 @@
 # src/air_pollution/model/base_model.py
 from abc import ABC, abstractmethod
+
 import pandas as pd
+
 
 class Model(ABC):
     """Abstract base class for machine learning models.
 
-    This class defines the blueprint for machine learning models, which includes methods 
-    for training and predicting. Subclasses must implement the `train` and `predict` 
-    methods. The `train` method trains the model on the given data, while the `predict` 
+    This class defines the blueprint for machine learning models, which includes methods
+    for training and predicting. Subclasses must implement the `train` and `predict`
+    methods. The `train` method trains the model on the given data, while the `predict`
     method makes predictions using the trained model.
     """
 

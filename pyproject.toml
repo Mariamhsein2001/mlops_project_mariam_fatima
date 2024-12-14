@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "air-pollution"
+version = "0.1.0"
+description = ""
+authors = ["Mariam <mariam_hsein@hotmail.com>"]
+readme = "README.md"
+packages = [{include = "air_pollution", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pandas = "^2.2.3"
+scikit-learn = "^1.6.0"
+omegaconf = "^2.3.0"
+pydantic = "^2.10.3"
+loguru = "^0.7.3"
+fastapi = "^0.115.6"
+uvicorn = "^0.32.1"
+mlflow = "^2.19.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pdoc = "^15.0.1"
+mypy = "^1.13.0"
+ruff = "^0.8.3"
+pytest = "^8.3.4"
+invoke = "^2.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+air_pollution = "air_pollution.main:main"
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+[tool.ruff.lint]
+select = ["E", "W", "F"] # Specify the types of rules to enforce
+ignore = ["E501"] # Ignore line length warnings
+
+[tool.ruff.format]
+quote-style = "double" # Like Black, use double quotes for strings.
+indent-style = "space" # Like Black, indent with spaces, rather than tabs.

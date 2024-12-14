@@ -1,7 +1,9 @@
 # src/air_pollution/data_loader/csv_loader.py
 import pandas as pd
-from .base_loader import DataLoader
 from loguru import logger
+
+from .base_loader import DataLoader
+
 
 class CSVLoader(DataLoader):
     def load_data(self, file_path: str) -> pd.DataFrame:

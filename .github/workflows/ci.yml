@@ -3,19 +3,16 @@ name: CI Workflow # The name of the workflow
 on: # Defines the events that trigger the workflow
   push: # Trigger the workflow on pushes to specific branches
     branches:
-      - master
+      - main
   pull_request: # Trigger the workflow on pull requests to specific branches
     branches:
-      - master
+      - main 
 
 
 jobs:
   test: # Name of the job
     runs-on: ubuntu-latest # Specifies the operating system to run the job
-    defaults:
-      run:
-        working-directory: ./Air-Quality-SWE # Step specific to this project
-
+    
     steps:
       - name: Checkout code # Step to clone the repository
         uses: actions/checkout@v4 # Official action to fetch repository content

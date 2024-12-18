@@ -8,6 +8,7 @@ on: # Defines the events that trigger the workflow
     branches:
       - master
 
+
 jobs:
   test: # Name of the job
     runs-on: ubuntu-latest # Specifies the operating system to run the job
@@ -19,12 +20,12 @@ jobs:
       - name: Checkout code # Step to clone the repository
         uses: actions/checkout@v4 # Official action to fetch repository content
 
-      - name: Setup Project Environment
+      - name: Project Setup # Use the custom reusable action.
         uses: ./.github/actions/setup
-
+        
       - name: Install Dependencies # Step to install project dependencies
         run: poetry install # Command to install dependencies from pyproject.toml
-
+          
       - name: Run Tests # Step to run tests
         run: poetry run invoke test
 

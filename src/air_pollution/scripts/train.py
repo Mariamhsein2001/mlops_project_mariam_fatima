@@ -5,7 +5,8 @@ from air_pollution.data_pipeline.preprocessing import Preprocessor
 from air_pollution.model.factory import ModelFactory
 import mlflow
 import mlflow.sklearn
-from sklearn.metrics import accuracy_score , f1_score
+from sklearn.metrics import accuracy_score, f1_score
+
 
 def run_training_pipeline(config_path: str):
     """
@@ -35,7 +36,9 @@ def run_training_pipeline(config_path: str):
         with mlflow.start_run():
             # Step 2: Load data
             logger.info(f"Loading data using {config.data_loader.file_type} loader.")
-            data_loader = DataLoaderFactory.get_data_loader(config.data_loader.file_type)
+            data_loader = DataLoaderFactory.get_data_loader(
+                config.data_loader.file_type
+            )
             data = data_loader.load_data(config.data_loader.file_path)
             logger.info(f"Data successfully loaded. Shape: {data.shape}")
 
@@ -44,18 +47,21 @@ def run_training_pipeline(config_path: str):
             mlflow.log_param("model_parameters", config.model.params)
             # Step 3: Preprocess the data
             target_column = "Air Quality"
-            logger.info(f"Initializing preprocessor with target column: {target_column}")
+            logger.info(
+                f"Initializing preprocessor with target column: {target_column}"
+            )
             preprocessor = Preprocessor(config, target_column)
             X_train, X_test, y_train, y_test = preprocessor.preprocess(data)
             logger.info("Data preprocessing completed.")
-            logger.debug(f"X_train shape: {X_train.shape}, X_test shape: {X_test.shape}")
+            logger.debug(
+                f"X_train shape: {X_train.shape}, X_test shape: {X_test.shape}"
+            )
 
             # Step 4: Train the model
             logger.info(f"Initializing and training model of type: {config.model.type}")
-            model = ModelFactory.get_model(config.model.type , config.model.params)
+            model = ModelFactory.get_model(config.model.type, config.model.params)
             model.train(X_train, y_train)
             logger.info("Model training completed.")
-
 
             # Step 5: Predict and evaluate
             logger.info("Generating predictions on the test set.")
@@ -66,7 +72,7 @@ def run_training_pipeline(config_path: str):
             logger.info("Model Evaluation")
             accuracy = accuracy_score(y_test, y_pred)
             mlflow.log_metric("accuracy", accuracy)
-            f1 = f1_score(y_test , y_pred ,  average='weighted')
+            f1 = f1_score(y_test, y_pred, average="weighted")
             mlflow.log_metric("f1_score", f1)
             logger.debug(f"Accuracy :  {accuracy} , F1-Score : {f1}")
             # logger.info("Generating confusion matrix.")
@@ -91,14 +97,14 @@ def run_training_pipeline(config_path: str):
             # logger.info(f"Model successfully saved to {model_path}.")
 
             # Log model artifact
-            input_example = X_test[0:1]  # Take the first sample from the test set as an example
-            mlflow.sklearn.log_model(model, artifact_path="model", input_example=input_example)
+            input_example = X_test[
+                0:1
+            ]  # Take the first sample from the test set as an example
+            mlflow.sklearn.log_model(
+                model, artifact_path="model", input_example=input_example
+            )
 
-
-            return {
-                "accuracy": accuracy,
-                "f1_score": f1
-            }
+            return {"accuracy": accuracy, "f1_score": f1}
     except Exception:
         logger.exception("An error occurred during pipeline execution.")
         raise

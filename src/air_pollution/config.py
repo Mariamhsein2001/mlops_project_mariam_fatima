@@ -120,13 +120,14 @@ class SplittingConfig(BaseModel):
             raise ValueError("test_size must be between 0 and 1.")
         return value
 
+
 class MLflowConfig(BaseModel):
     """Configuration for MLflow.
 
     Attributes:
-        tracking_uri (str): The URI for the MLflow tracking server. 
+        tracking_uri (str): The URI for the MLflow tracking server.
             Must be a valid URI.
-        experiment_name (str): The name of the MLflow experiment. 
+        experiment_name (str): The name of the MLflow experiment.
             Must not be empty.
     """
 

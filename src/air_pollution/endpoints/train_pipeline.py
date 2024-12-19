@@ -5,9 +5,11 @@ from air_pollution.scripts.train import run_training_pipeline
 # Initialize router
 router = APIRouter()
 
+
 # Request schema
 class TrainRequest(BaseModel):
     config_path: str
+
 
 # Response schema
 class TrainResponse(BaseModel):

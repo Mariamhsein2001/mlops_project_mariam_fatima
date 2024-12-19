@@ -5,14 +5,14 @@ from loguru import logger
 import joblib  # For loading the saved model
 
 from air_pollution.config import TransformationConfig
-from air_pollution.data_pipeline.data_transformer.base_transformer import DataTransformer
+from air_pollution.data_pipeline.data_transformer.base_transformer import (
+    DataTransformer,
+)
 from air_pollution.data_pipeline.data_transformer.factory import TransformerFactory
 from air_pollution.model.base_model import Model
 
 
-def load_pipeline(
-    transformation_config: TransformationConfig
-) -> "InferencePipeline":
+def load_pipeline(transformation_config: TransformationConfig) -> "InferencePipeline":
     data_transformer = TransformerFactory.get_transformer(
         transformation_config.scaling_method
     )

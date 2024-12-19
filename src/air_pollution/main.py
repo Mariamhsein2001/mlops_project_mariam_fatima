@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from air_pollution.endpoints.health import router as health_router
 from air_pollution.endpoints.train_pipeline import router as pipeline_router
-from air_pollution.endpoints.inference_pipeline import router as inference_router
 
 # Initialize the FastAPI app
 app = FastAPI(title="Air Pollution Project API", version="1.0")
@@ -16,4 +15,3 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
-

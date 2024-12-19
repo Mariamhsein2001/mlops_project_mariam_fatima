@@ -4,23 +4,23 @@ import pandas as pd
 from loguru import logger
 import joblib  # For loading the saved model
 
-from air_pollution.config import ModelConfig, TransformationConfig
-from air_pollution.data_pipeline.data_transformer.base_transformer import DataTransformer
+from air_pollution.config import TransformationConfig
+from air_pollution.data_pipeline.data_transformer.base_transformer import (
+    DataTransformer,
+)
 from air_pollution.data_pipeline.data_transformer.factory import TransformerFactory
 from air_pollution.model.base_model import Model
 
 
-def load_pipeline(
-    transformation_config: TransformationConfig
-) -> "InferencePipeline":
+def load_pipeline(transformation_config: TransformationConfig) -> "InferencePipeline":
     data_transformer = TransformerFactory.get_transformer(
         transformation_config.scaling_method
     )
-    
+
     # Load the model from the saved path
     model_path = "trained_model.pkl"  # Ensure this path is defined in your config file
     model = joblib.load(model_path)
-    
+
     return InferencePipeline(data_transformer, model)
 
 

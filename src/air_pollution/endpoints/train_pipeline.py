@@ -5,9 +5,11 @@ from air_pollution.scripts.train import run_training_pipeline
 # Initialize router
 router = APIRouter()
 
+
 # Request schema
 class TrainRequest(BaseModel):
     config_path: str
+
 
 # Response schema
 class TrainResponse(BaseModel):
@@ -16,7 +18,7 @@ class TrainResponse(BaseModel):
 
 
 @router.post("/train", response_model=TrainResponse)
-async def train_model(request: TrainRequest):
+async def train_model(request: TrainRequest) -> TrainResponse:
     """
     Train the ML model based on the provided configuration file.
 

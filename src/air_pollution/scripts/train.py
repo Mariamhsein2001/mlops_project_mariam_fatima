@@ -1,12 +1,10 @@
 from loguru import logger
-from sklearn.metrics import classification_report, confusion_matrix
 from air_pollution.config import load_config
 from air_pollution.data_loader.factory import DataLoaderFactory
 from air_pollution.data_pipeline.preprocessing import Preprocessor
 from air_pollution.model.factory import ModelFactory
 import mlflow
 import mlflow.sklearn
-import joblib
 from sklearn.metrics import accuracy_score , f1_score
 
 def run_training_pipeline(config_path: str):

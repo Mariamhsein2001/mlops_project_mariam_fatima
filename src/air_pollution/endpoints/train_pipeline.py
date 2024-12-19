@@ -18,7 +18,7 @@ class TrainResponse(BaseModel):
 
 
 @router.post("/train", response_model=TrainResponse)
-async def train_model(request: TrainRequest):
+async def train_model(request: TrainRequest) -> TrainResponse:
     """
     Train the ML model based on the provided configuration file.
 

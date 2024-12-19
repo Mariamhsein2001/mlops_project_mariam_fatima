@@ -32,6 +32,15 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 air_pollution = "air_pollution.main:main"
 
+# mypy configuration
+[tool.mypy]
+pretty = true
+strict = true
+python_version = "3.9"
+check_untyped_defs = true
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
+
 [tool.ruff]
 line-length = 88
 indent-width = 4

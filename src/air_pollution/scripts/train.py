@@ -6,9 +6,10 @@ from air_pollution.model.factory import ModelFactory
 import mlflow
 import mlflow.sklearn
 from sklearn.metrics import accuracy_score, f1_score
+from typing import Dict
 
 
-def run_training_pipeline(config_path: str):
+def run_training_pipeline(config_path: str) -> Dict[str, float]:
     """
     Execute the ML data pipeline for training and evaluation.
 

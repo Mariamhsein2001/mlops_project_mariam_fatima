@@ -1,5 +1,6 @@
 import pandas as pd
 import pytest
+from typing import Any
 
 from air_pollution.data_pipeline.preprocessing import Preprocessor
 
@@ -33,7 +34,7 @@ def sample_data() -> pd.DataFrame:
 
 
 @pytest.fixture
-def sample_config():
+def sample_config() -> Any:
     """
     Creates a sample configuration object for testing.
 
@@ -51,7 +52,7 @@ def sample_config():
     return DummyConfig()
 
 
-def test_preprocessor(sample_config, sample_data):
+def test_preprocessor(sample_config: Any, sample_data: pd.DataFrame) -> None:
     """
     Tests the Preprocessor class for correct functionality.
 

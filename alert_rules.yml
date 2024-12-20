@@ -9,3 +9,23 @@ groups:
         annotations:
           summary: "Pipeline failures detected"
           description: "The pipeline has encountered failures."
+
+  - name: MLModelAlerting
+    rules:
+      - alert: LowModelAccuracy
+        expr: ml_model_accuracy < 0.80
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Model accuracy is below threshold."
+          description: "Accuracy of {{ $labels.model }} model is below 0.80."
+
+      - alert: LowModelF1Score
+        expr: ml_model_f1_score < 0.75
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Model F1 score is below threshold."
+          description: "F1 score of {{ $labels.model }} model is below 0.75."

@@ -1,0 +1,11 @@
+groups:
+  - name: example-alerts
+    rules:
+      - alert: PipelineFailure
+        expr: predict_request_errors_total > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Pipeline failures detected"
+          description: "The pipeline has encountered failures."

@@ -1,3 +1,7 @@
+import argparse
+import os
+
+import joblib
 from loguru import logger
 from air_pollution.config import load_config
 from air_pollution.data_loader.factory import DataLoaderFactory
@@ -7,6 +11,12 @@ import mlflow
 import mlflow.sklearn
 from sklearn.metrics import accuracy_score, f1_score
 from typing import Dict
+
+logger.add("logs/training.log", rotation="500 MB")
+parser = argparse.ArgumentParser(description="Run the Air Quality Pollution data pipeline training with specified configuration.")
+parser.add_argument("--config", type=str, required=True, help="Path to the configuration YAML file.")
+    
+
 
 
 def run_training_pipeline(config_path: str) -> Dict[str, float]:
@@ -76,26 +86,6 @@ def run_training_pipeline(config_path: str) -> Dict[str, float]:
             f1 = f1_score(y_test, y_pred, average="weighted")
             mlflow.log_metric("f1_score", f1)
             logger.debug(f"Accuracy :  {accuracy} , F1-Score : {f1}")
-            # logger.info("Generating confusion matrix.")
-            # cm = confusion_matrix(y_test, predictions).tolist()
-            # mlflow.log_metric("confusion_matrix", cm)
-
-            # logger.info("Generating classification report.")
-            # report = classification_report(y_test, predictions, output_dict=True)
-
-            # # Log evaluation metrics
-            # for label, metrics in report.items():
-            #     if isinstance(metrics, dict):
-            #         for metric, value in metrics.items():
-            #             mlflow.log_metric(f"{label}_{metric}", value)
-            #     else:
-            #         mlflow.log_metric(label, metrics)
-
-            # # Step 7: Save the trained model to disk
-            # model_path = r"C:\Users\user\Desktop\SE\air_pollution\trained_model.pkl"  # Ensure `save_path` is part of the configuration file
-            # logger.info(f"Saving trained model to {model_path}.")
-            # joblib.dump(model, model_path)
-            # logger.info(f"Model successfully saved to {model_path}.")
 
             # Log model artifact
             input_example = X_test[
@@ -104,8 +94,28 @@ def run_training_pipeline(config_path: str) -> Dict[str, float]:
             mlflow.sklearn.log_model(
                 model, artifact_path="model", input_example=input_example
             )
+            
+            # Step 7: Save the trained model to a directory
+            model_directory = "trained_model"
+            os.makedirs(model_directory, exist_ok=True)  # Create directory if it doesn't exist
+            model_path = os.path.join(model_directory, "trained_model.pkl")
+            joblib.dump(model, model_path)  # Save the model using joblib
+            logger.info(f"Model saved to {model_path}")
 
             return {"accuracy": accuracy, "f1_score": f1}
     except Exception:
         logger.exception("An error occurred during pipeline execution.")
         raise
+
+def main() -> None:
+
+    logger.info("Parsing command line arguments.")
+    args = parser.parse_args()
+    logger.debug(f"Command line arguments: {args}.")
+    # Execute the training pipeline
+    result = run_training_pipeline(args.config)
+    print(result)
+
+
+if __name__ == "__main__":
+    main()

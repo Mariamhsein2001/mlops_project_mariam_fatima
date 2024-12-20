@@ -37,6 +37,7 @@ class PredictInput(BaseModel):
     Attributes:
         data (List[Dict[str, Any]]): A list of dictionaries, each representing a row with feature values.
     """
+
     data: List[Dict[str, Any]]
 
 
@@ -48,6 +49,7 @@ class PredictOutput(BaseModel):
     Attributes:
         predictions (List[str]): A list of predicted class labels (e.g., Good, Moderate, etc.).
     """
+
     predictions: List[str]
 
 
@@ -89,25 +91,21 @@ async def predict_endpoint(input_data: PredictInput) -> PredictOutput:
             input_df = pd.DataFrame(input_data.data)
             logger.info("Input data converted to DataFrame.")
 
-
             # Run pipeline predict method
             predictions_df = pipeline_endpoint.run(input_df)
+
             logger.info("Pipeline prediction executed.")
 
-
             # Map predicted indices to class labels
+
             predictions_classes = [
                 CLASS_LABELS.get(pred, "Unknown")
-                for pred in predictions_df.astype(int).values
+                for pred in predictions_df.astype(float).values
             ]
             logger.info("Prediction completed successfully.")
-
 
             return PredictOutput(predictions=predictions_classes)
         except Exception as e:
             REQUEST_ERRORS.inc()  # Increment error count
             logger.error(f"Error in predict endpoint: {e}")
             raise HTTPException(status_code=500, detail="Prediction failed.")
-
-
-

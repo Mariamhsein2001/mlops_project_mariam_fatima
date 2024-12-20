@@ -5,7 +5,9 @@ import joblib  # For loading the saved model
 import json  # For parsing the JSON-like input
 
 from air_pollution.config import TransformationConfig
-from air_pollution.data_pipeline.data_transformer.base_transformer import DataTransformer
+from air_pollution.data_pipeline.data_transformer.base_transformer import (
+    DataTransformer,
+)
 from air_pollution.data_pipeline.data_transformer.factory import TransformerFactory
 from air_pollution.model.base_model import Model
 from fastapi import HTTPException
@@ -17,6 +19,7 @@ CLASS_LABELS = {
     2: "Hazardous",
     3: "Poor",
 }
+
 
 def load_pipeline(
     transformation_config: TransformationConfig, model_path: str
@@ -47,8 +50,8 @@ class InferencePipeline:
         self._data_transformer = data_transformer
         self._model = model
 
-    def run(self, data: pd.DataFrame) -> str:
-        """Runs the inference data pipeline on the input data and returns the class label."""
+    def run(self, data: pd.DataFrame) -> pd.Series:
+        """Runs the inference data pipeline on the input data and returns the predictions."""
         try:
             logger.info("Pipeline execution started.")
             logger.info("Applying Data transformation.")
@@ -58,33 +61,29 @@ class InferencePipeline:
 
             logger.info("Running Inference.")
             predictions = self._model.predict(transformed_data)
-            logger.debug(f"Predictions: {predictions.head()}")
+            logger.debug(f"Predictions: {predictions}")
             logger.info("Model prediction completed successfully.")
             logger.info("Pipeline execution completed.")
-
-            # Convert the numerical prediction to a class label
-            predicted_class = predictions.iloc[0]  # Get the first prediction (assuming one row of input)
-            class_label = CLASS_LABELS.get(predicted_class, "Unknown")  # Map to class label
-            logger.info(f"Predicted class label: {class_label}")
-            return class_label
+            return predictions  # Return raw predictions for further processing
 
         except Exception as e:
             logger.error(f"Failed in Pipeline Execution: {e}")
             raise HTTPException(status_code=500, detail="Error during inference.")
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description="Run inference on input data.")
     parser.add_argument(
         "--data",
         type=str,
         required=True,
-        help="Inference data in JSON object format (e.g., '{\"Temperature\": 28.3, \"Humidity\": 75.6, ...}') or a comma-separated list.",
+        help="Inference data in String object format (e.g., '28.3, 75.6, 2.3, 12.2, 30.8, 9.7, 1.64, 6, 611' representing the features) or a comma-separated list.",
     )
     return parser.parse_args()
 
-def main():
+
+def main() -> None:
     # Parse command-line arguments
     args = parse_args()
 
@@ -95,10 +94,17 @@ def main():
             logger.info(f"User input as JSON object: {data_dict}")
         except json.JSONDecodeError:
             # If JSON fails, try treating the input as a comma-separated string
-            feature_values = args.data.split(',')
+            feature_values = args.data.split(",")
             feature_names = [
-                "Temperature", "Humidity", "PM2.5", "PM10", "NO2", "SO2", "CO",
-                "Proximity_to_Industrial_Areas", "Population_Density"
+                "Temperature",
+                "Humidity",
+                "PM2.5",
+                "PM10",
+                "NO2",
+                "SO2",
+                "CO",
+                "Proximity_to_Industrial_Areas",
+                "Population_Density",
             ]
             if len(feature_values) != len(feature_names):
                 raise ValueError("Input does not match expected number of features.")
@@ -119,16 +125,26 @@ def main():
         return
 
     # Setup transformation configuration
-    transformation_config = TransformationConfig(scaling_method="minmax",normalize=False)
+    transformation_config = TransformationConfig(
+        scaling_method="minmax", normalize=False
+    )
     model_path = "trained_model/trained_model.pkl"
-    
+
     # Load the pipeline
     pipeline = load_pipeline(transformation_config, model_path)
 
     try:
-        # Run inference and display predictions
-        class_label = pipeline.run(data)  # Get the class label instead of the DataFrame
-        logger.info(f"Inference completed. Predicted class label: {class_label}")
+        # Run inference and get raw predictions
+        predictions = pipeline.run(data)
+        logger.info(f"Inference completed. Predictions: {predictions}")
+
+        # Map predictions to class labels
+        class_labels = [
+            CLASS_LABELS.get(int(pred), "Unknown")  # Assuming predictions are numeric
+            for pred in predictions.astype(float).values
+        ]
+        logger.info(f"Predicted class labels: {class_labels}")
+
     except HTTPException as e:
         logger.error(f"Inference failed: {e.detail}")
 

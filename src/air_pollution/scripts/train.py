@@ -13,10 +13,12 @@ from sklearn.metrics import accuracy_score, f1_score
 from typing import Dict
 
 logger.add("logs/training.log", rotation="500 MB")
-parser = argparse.ArgumentParser(description="Run the Air Quality Pollution data pipeline training with specified configuration.")
-parser.add_argument("--config", type=str, required=True, help="Path to the configuration YAML file.")
-    
-
+parser = argparse.ArgumentParser(
+    description="Run the Air Quality Pollution data pipeline training with specified configuration."
+)
+parser.add_argument(
+    "--config", type=str, required=True, help="Path to the configuration YAML file."
+)
 
 
 def run_training_pipeline(config_path: str) -> Dict[str, float]:
@@ -94,10 +96,12 @@ def run_training_pipeline(config_path: str) -> Dict[str, float]:
             mlflow.sklearn.log_model(
                 model, artifact_path="model", input_example=input_example
             )
-            
+
             # Step 7: Save the trained model to a directory
             model_directory = "trained_model"
-            os.makedirs(model_directory, exist_ok=True)  # Create directory if it doesn't exist
+            os.makedirs(
+                model_directory, exist_ok=True
+            )  # Create directory if it doesn't exist
             model_path = os.path.join(model_directory, "trained_model.pkl")
             joblib.dump(model, model_path)  # Save the model using joblib
             logger.info(f"Model saved to {model_path}")
@@ -107,8 +111,8 @@ def run_training_pipeline(config_path: str) -> Dict[str, float]:
         logger.exception("An error occurred during pipeline execution.")
         raise
 
-def main() -> None:
 
+def main() -> None:
     logger.info("Parsing command line arguments.")
     args = parser.parse_args()
     logger.debug(f"Command line arguments: {args}.")

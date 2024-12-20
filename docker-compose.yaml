@@ -20,12 +20,20 @@ services:
       - ./mlruns:/mlflow/artifacts
     command: "mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlflow/artifacts --host 0.0.0.0 --port 5000"
 
+  alertmanager:
+    image: prom/alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/config.yml
+
   prometheus:
     image: prom/prometheus
     ports:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
 
   grafana:
     image: grafana/grafana
@@ -39,14 +47,7 @@ services:
       - GF_SECURITY_ADMIN_USER=admin  # Default admin user
       - GF_SECURITY_ADMIN_PASSWORD=admin  # Default admin password
 
-  alertmanager:
-    image: prom/alertmanager
-    ports:
-      - "9093:9093"
-    volumes:
-      - ./alertmanager.yml:/etc/alertmanager/config.yml
+
 
 volumes:
   grafana_data:
-
-

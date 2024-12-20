@@ -9,6 +9,7 @@ from air_pollution.data_pipeline.preprocessing import Preprocessor
 from air_pollution.model.factory import ModelFactory
 import mlflow
 import mlflow.sklearn
+from mlflow.tracking import MlflowClient
 from sklearn.metrics import accuracy_score, f1_score
 from typing import Dict
 
@@ -105,6 +106,45 @@ def run_training_pipeline(config_path: str) -> Dict[str, float]:
             model_path = os.path.join(model_directory, "trained_model.pkl")
             joblib.dump(model, model_path)  # Save the model using joblib
             logger.info(f"Model saved to {model_path}")
+
+            # Step 8: Register model to MLflow Model Registry
+            # Check if there's an active run
+            active_run = mlflow.active_run()
+
+            if active_run:
+                # If an active run exists, access the run ID
+                run_id = active_run.info.run_id
+            else:
+                # Handle case where there's no active run
+                with mlflow.start_run() as run:
+                    run_id = run.info.run_id
+
+            # Now you can safely work with run_id
+            model_uri = f"runs:/{run_id}/model"
+            model_name = "AirQualityPredictionModel"
+
+            # Register the model to the Model Registry
+            registered_model_version = mlflow.register_model(model_uri, model_name)
+            logger.info(
+                f"Model registered: {model_name} (version: {registered_model_version.version})"
+            )
+
+            client = MlflowClient(tracking_uri=config.mlflow.tracking_uri)
+
+            # Set alias 'champion' for the registered model version
+            version_str = str(
+                registered_model_version.version
+            )  # Convert version to string
+            client.set_registered_model_alias(model_name, "champion", version_str)
+            logger.info(
+                f"Alias 'champion' set for version {version_str} of model '{model_name}'."
+            )
+
+            # Get the model version by alias
+            model_version = client.get_model_version_by_alias(model_name, "champion")
+            logger.info(
+                f"Retrieved model version using alias 'champion': {model_version.version}"
+            )
 
             return {"accuracy": accuracy, "f1_score": f1}
     except Exception:

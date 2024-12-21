@@ -1,3 +1,24 @@
+
+Here’s the inference_pipeline.py script with docstrings added while keeping everything else intact:
+
+python
+Copy code
+"""
+Script for handling inference requests in the air quality prediction system.
+
+This script defines:
+- An API endpoint for making predictions based on input data.
+- Metrics collection for monitoring request counts, latency, and errors.
+- Input and output schemas for validation.
+
+Classes:
+    PredictInput: Schema for incoming prediction requests.
+    PredictOutput: Schema for outgoing prediction responses.
+
+Endpoints:
+    POST /predict: Accepts input data and returns predicted class labels.
+"""
+
 from typing import Any, Dict, List
 import pandas as pd
 from fastapi import APIRouter, HTTPException

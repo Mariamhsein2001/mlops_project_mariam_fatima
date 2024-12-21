@@ -1,8 +1,3 @@
-
-Here’s the inference_pipeline.py script with docstrings added while keeping everything else intact:
-
-python
-Copy code
 """
 Script for handling inference requests in the air quality prediction system.
 

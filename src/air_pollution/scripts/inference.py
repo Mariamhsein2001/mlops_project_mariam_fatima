@@ -29,6 +29,9 @@ from air_pollution.data_pipeline.data_transformer.factory import TransformerFact
 from air_pollution.model.base_model import Model
 from fastapi import HTTPException
 
+
+logger.add("logs/inference.log", rotation="500 MB")
+
 # Define the class labels
 CLASS_LABELS = {
     0: "Good",

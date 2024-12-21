@@ -32,7 +32,6 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-air_pollution = "air_pollution.main:main"
 air_pollution_train = "air_pollution.scripts.train:main"
 air_pollution_inference = "air_pollution.scripts.inference:main"
 

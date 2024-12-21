@@ -78,7 +78,6 @@ The **Air Pollution Prediction System** is a machine learning application design
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd air-pollution
    ```
 
 2. Install dependencies with Poetry:
@@ -144,19 +143,19 @@ poetry run air_pollution_inference --data "{\"Temperature\": 28.3, \"Humidity\":
 ### 2. **Configurations**
 Defined in `config/config_dev.yml`:
 - **Data Loader**:
-  - File Path: `data/updated_pollution_dataset.csv`
-  - File Type: `csv`
+  - File Path: Path to the dataset file, e.g., data/updated_pollution_dataset.csv.
+  - File Type: Format of the dataset (e.g., csv, json).
 - **Transformation**:
-  - Normalization: `false`
-  - Scaling Method: `minmax`
+  - Normalization:  Flag indicating if data normalization should be applied (true or false).
+  - Scaling Method:  The scaling method used, such as minmax, or standard .
 - **Model**:
-  - Type: `decisiontree` or `logistic`
-  - Parameters: `{}` (configurable).
+  - Type: Type of machine learning model used (decisiontree, logistic).
+  - Parameters: A dictionary containing hyperparameters and configuration specific to the model, e.g., {} for default parameters.
 
 ### 3. **Monitoring and Alerting**
 - **Prometheus**:
   - Tracks pipeline and model performance.
-  - Metrics include:
+  - Some Metrics include:
     - `predict_requests_total`
     - `training_accuracy`
     - `training_f1_score`
@@ -171,12 +170,15 @@ GitHub Actions for:
 - Linting (`ruff`).
 - Type Checking (`mypy`).
 
+### 5. **Docs** 
+To know more about the files and their usage, you can view the documentation generated in the src/air_pollution/doc directory. This includes detailed explanations and guides
+
 ---
 
 ## Testing
 Run tests with:
 ```bash
-poetry run pytest
+poetry invoke test
 ```
 Test files:
 - `test_data_loader.py`: Tests for CSV and JSON data loading.

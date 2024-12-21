@@ -1,0 +1,11 @@
+{
+    "Temperature": 25.5,
+    "Humidity": 60.2,
+    "PM2.5": 35.7,
+    "PM10": 50.8,
+    "NO2": 15.4,
+    "SO2": 10.2,
+    "CO": 0.7,
+    "Proximity_to_Industrial_Areas": 1,
+    "Population_Density": 1200
+}

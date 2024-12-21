@@ -75,7 +75,9 @@ def run_training_pipeline(config_path: str) -> Dict[str, float]:
         with mlflow.start_run():
             # Step 3: Load data
             logger.info(f"Loading data using {config.data_loader.file_type} loader.")
-            data_loader = DataLoaderFactory.get_data_loader(config.data_loader.file_type)
+            data_loader = DataLoaderFactory.get_data_loader(
+                config.data_loader.file_type
+            )
             data = data_loader.load_data(config.data_loader.file_path)
             logger.info(f"Data successfully loaded. Shape: {data.shape}")
 
@@ -85,11 +87,15 @@ def run_training_pipeline(config_path: str) -> Dict[str, float]:
 
             # Step 4: Preprocess the data
             target_column = "Air Quality"
-            logger.info(f"Initializing preprocessor with target column: {target_column}")
+            logger.info(
+                f"Initializing preprocessor with target column: {target_column}"
+            )
             preprocessor = Preprocessor(config, target_column)
             X_train, X_test, y_train, y_test = preprocessor.preprocess(data)
             logger.info("Data preprocessing completed.")
-            logger.debug(f"X_train shape: {X_train.shape}, X_test shape: {X_test.shape}")
+            logger.debug(
+                f"X_train shape: {X_train.shape}, X_test shape: {X_test.shape}"
+            )
 
             # Step 5: Train the model
             logger.info(f"Initializing and training model of type: {config.model.type}")
@@ -104,7 +110,9 @@ def run_training_pipeline(config_path: str) -> Dict[str, float]:
             f1 = f1_score(y_test, y_pred, average="weighted")
             mlflow.log_metric("accuracy", accuracy)
             mlflow.log_metric("f1_score", f1)
-            logger.info(f"Model evaluation completed. Accuracy: {accuracy}, F1-Score: {f1}")
+            logger.info(
+                f"Model evaluation completed. Accuracy: {accuracy}, F1-Score: {f1}"
+            )
 
             # Step 7: Save the trained model
             model_directory = "trained_model"
@@ -115,7 +123,9 @@ def run_training_pipeline(config_path: str) -> Dict[str, float]:
 
             # Step 8: Register model with MLflow
             active_run = mlflow.active_run()
-            run_id = active_run.info.run_id if active_run else mlflow.start_run().info.run_id
+            run_id = (
+                active_run.info.run_id if active_run else mlflow.start_run().info.run_id
+            )
             model_uri = f"runs:/{run_id}/model"
             model_name = "AirQualityPredictionModel"
 
@@ -123,7 +133,9 @@ def run_training_pipeline(config_path: str) -> Dict[str, float]:
             client = MlflowClient(tracking_uri=config.mlflow.tracking_uri)
             version_str = str(registered_model_version.version)
             client.set_registered_model_alias(model_name, "champion", version_str)
-            logger.info(f"Model registered with alias 'champion': version {version_str}")
+            logger.info(
+                f"Model registered with alias 'champion': version {version_str}"
+            )
 
             return {"accuracy": accuracy, "f1_score": f1}
 

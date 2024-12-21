@@ -48,6 +48,7 @@ class TrainRequest(BaseModel):
     Attributes:
         config_path (str): The file path to the configuration file used for the training process.
     """
+
     config_path: str
 
 
@@ -59,6 +60,7 @@ class TrainResponse(BaseModel):
         accuracy (float): The accuracy of the trained model.
         f1_score (float): The F1 score of the trained model.
     """
+
     accuracy: float
     f1_score: float
 

@@ -66,40 +66,69 @@ The **Air Pollution Prediction System** is a machine learning application design
 
 ---
 
-## Setup Instructions
+### Setup Instructions
 
-### Prerequisites
-1. **Python 3.9 or above**.
-2. **Poetry** for dependency management.
-3. **Docker** and **Docker Compose** for containerized deployment.
+#### Prerequisites
+- Python 3.9 or above
+- Poetry for dependency management
+- Docker and Docker Compose for containerized deployment
 
-### Local Installation
+#### Local Installation
+
 1. Clone the repository:
    ```bash
    git clone <repository-url>
    cd air-pollution
    ```
+
 2. Install dependencies with Poetry:
    ```bash
    poetry install
    ```
+
 3. Run the API locally:
    ```bash
    poetry run uvicorn src.air_pollution.main:app --reload
    ```
-4. Access the API at [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
-### Using Docker
+4. Access the API at [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+#### Using Docker
+
 1. Build and start all services:
    ```bash
    docker-compose up --build
    ```
+
 2. Access:
    - API: [http://127.0.0.1:8000](http://127.0.0.1:8000)
    - MLflow: [http://127.0.0.1:5000](http://127.0.0.1:5000)
    - Grafana: [http://127.0.0.1:3000](http://127.0.0.1:3000)
    - Prometheus: [http://127.0.0.1:9090](http://127.0.0.1:9090)
 
+#### Training
+
+To train the model using mlflow, use the following command:
+```bash
+poetry run air_pollution_train --config config/config_dev.yaml
+```
+
+#### Inference
+
+For interactive inference:
+```bash
+poetry run air_pollution_inference --interactive
+```
+
+For inference with a file:
+```bash
+poetry run air_pollution_inference --file input_data.json
+```
+
+For inference with data:
+```bash
+poetry run air_pollution_inference --data "{\"Temperature\": 28.3, \"Humidity\": 75.6, \"PM2.5\": 35.2, \"CO2\": 420, \"NO2\": 23.5}"
+```
 ---
 
 ## Key Components

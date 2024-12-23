@@ -61,7 +61,8 @@ The **Air Pollution Prediction System** is a machine learning application design
 ├── Dockerfile
 ├── README.md
 ├── poetry.lock
-├── pyproject.toml
+├── pyproject.toml 
+...
 ```
 
 ---
@@ -171,7 +172,7 @@ GitHub Actions for:
 - Type Checking (`mypy`).
 
 ### 5. **Docs** 
-To know more about the files and their usage, you can view the documentation generated in the src/air_pollution/doc directory. This includes detailed explanations and guides
+To know more about the files and their usage, you can view the documentation generated in the doc directory. This includes detailed explanations and guides
 
 ---
 
